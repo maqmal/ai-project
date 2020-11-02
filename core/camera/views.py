@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse,StreamingHttpResponse,HttpResponseServerError
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators import gzip
+import cv2
+import time
 from camera.forms import UserForm,UserProfileInfoForm
-# Create your views here.
 
+# Create your views here.
 def index(request):
     return render(request,'camera/index.html')
 
@@ -29,18 +32,18 @@ def register(request):
             user.save()
             profile = profile_form.save(commit=False)
             profile.user = user
-            if 'profile_pic' in request.FILES:
+            if 'user_pic' in request.FILES:
                 print('found it')
-                profile.profile_pic = request.FILES['profile_pic']
+                profile.user_pic = request.FILES['user_pic']
             profile.save()
             registered = True
         else:
-            print(user_form.errors,profile_form.errors)
+            print(user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
 
-    return(request,'camera/registration.html',{'user_form':user_form,'profile_form':profile_form,'registered':registered}})
+    return render(request,'camera/registration.html',{'user_form':user_form,'profile_form':profile_form,'registered':registered})
 
 def user_login(request):
     if request.method == 'POST':
@@ -61,4 +64,23 @@ def user_login(request):
     else:
         return render(request, 'camera/login.html', {})
 
-    
+class VideoCamera(object):
+    def __init__(self):
+        self.capture = cv2.VideoCapture(0)
+    def __del__(self):
+        self.capture.release()
+    def get_frame(self):
+        _,frame = self.capture.read()
+        resize_frame = cv2.resize(frame, (640, 480), interpolation = cv2.INTER_LINEAR) 
+        _,jpeg = cv2.imencode('.jpg',resize_frame)
+        return jpeg.tobytes() 
+
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield(b'--frame\r\n'
+        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+@gzip.gzip_page
+def camera_feed(request):
+    return StreamingHttpResponse(gen(VideoCamera()),content_type="multipart/x-mixed-replace;boundary=frame")
