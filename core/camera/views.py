@@ -11,6 +11,10 @@ from camera.opencv import VideoCamera, FaceDetect
 # Create your views here.
 def index(request):
     return render(request,'camera/index.html')
+    
+@login_required
+def detect_on(request):
+    return render(request,'camera/face_detect.html')
 
 @login_required
 def login_succsess(request):

@@ -7,10 +7,10 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Vanilla Feed</a>
+                    <a class="nav-link" href="{% url 'index'%}">Vanilla Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="detect_on/">Face Detect Feed</a>
+                    <a class="nav-link active" href="#">Face Detect Feed</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" tabindex="-1">Smart System Feed</a>
@@ -19,7 +19,7 @@
         </div>
         <div class="card-body">
             <h5 class="card-title">Welcome!</h5>
-            <img src="{% url 'camera:camera_feed' %}" alt="error">
+            <img src="{% url 'camera:face_detect' %}" alt="error">
             <p class="card-text">Hello {{ user.username }}</p>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
         </div>
