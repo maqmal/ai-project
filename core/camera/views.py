@@ -4,9 +4,13 @@ from django.http import HttpResponseRedirect, HttpResponse,StreamingHttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators import gzip
-
+from django.contrib import messages
+from django.conf import settings
 from camera.forms import UserForm,UserProfileInfoForm
 from camera.opencv import VideoCamera, FaceDetect
+import numpy as np
+import face_recognition, os, cv2, glob
+from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
@@ -69,7 +73,13 @@ def user_login(request):
         return render(request, 'camera/login.html', {})
 
 
-def generator(camera):
+def generator1(camera):
+    while True:
+        frame = camera.get_frame()
+        yield(b'--frame\r\n'
+        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+def generator2(camera):
     while True:
         frame = camera.get_frame()
         yield(b'--frame\r\n'
@@ -77,8 +87,8 @@ def generator(camera):
 
 @gzip.gzip_page
 def camera_feed(request):
-    return StreamingHttpResponse(generator(VideoCamera()),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(generator1(VideoCamera()),content_type="multipart/x-mixed-replace;boundary=frame")
 
 @gzip.gzip_page
 def face_detect(request):
-    return StreamingHttpResponse(generator(FaceDetect()),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(generator2(FaceDetect()),content_type="multipart/x-mixed-replace;boundary=frame")

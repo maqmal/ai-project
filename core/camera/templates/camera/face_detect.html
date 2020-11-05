@@ -10,17 +10,16 @@
                     <a class="nav-link" href="{% url 'index'%}">Vanilla Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Face Detect Feed</a>
+                    <a class="nav-link active" href="#">AI Feed 1</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" tabindex="-1">Smart System Feed</a>
+                    <a class="nav-link" href="#" tabindex="-1">AI Feed 2</a>
                 </li>
             </ul>
         </div>
         <div class="card-body">
-            <h5 class="card-title">Welcome!</h5>
+            <h5 class="card-title display-4">Welcome {{ user.username }}!</h5>
             <img src="{% url 'camera:face_detect' %}" alt="error">
-            <p class="card-text">Hello {{ user.username }}</p>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
         </div>
         {% else %}

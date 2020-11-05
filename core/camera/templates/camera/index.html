@@ -5,23 +5,23 @@
     <div class="card text-center">
         {% if user.is_authenticated %}
         <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
+            <ul class="nav nav-tabs card-header-tabs" id="modeNav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Vanilla Feed</a>
+                    <a class="nav-link active" href="#" id="vanillaBtn">Vanilla Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="detect_on/">Face Detect Feed</a>
+                    <a class="nav-link" href="{% url 'detect_on'%}" id="detectBtn">AI Feed 1</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" tabindex="-1">Smart System Feed</a>
+                    <a class="nav-link" href="#" tabindex="-1" id="smartBtn">AI Feed 2</a>
                 </li>
             </ul>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">Welcome!</h5>
-            <img src="{% url 'camera:camera_feed' %}" alt="error">
-            <p class="card-text">Hello {{ user.username }}</p>
-            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+        <div class="card-body placeImage">
+            <h5 class="card-title display-4">Welcome {{ user.username }}!</h5>
+            <img src="{% url 'camera:camera_feed' %}" alt="error" id="vanillaImg">
+            <br>
+            
         </div>
         {% else %}
         <h2>Register or Login if you'd like to</h2>
