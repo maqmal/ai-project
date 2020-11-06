@@ -1,1 +1,1 @@
-Build with django
+Web server for jetson nano
