@@ -1,1 +1,1 @@
-Build with django and opencv
+Build with django
