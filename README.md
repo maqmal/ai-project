@@ -1,1 +1,1 @@
-Web server for jetson nano
+face recognition web app
